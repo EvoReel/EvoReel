@@ -14,6 +14,7 @@ static/data/films.js          film metadata (title, brief, acts, chapters with t
 static/images/                paper figures, posters, per-chapter thumbnails (thumbs/<film>/NN.jpg)
 static/videos/full/           full films (H.264 + AAC, faststart)
 static/videos/highlights/     ~30 s highlight clips used in the comparisons
+static/videos/evoreel_explainer.mp4   3-minute method overview (top of the page)
 static/videos/previews/       12 s muted loops for the highlight wall
 static/videos/gallery/        6 s muted moments for the scrolling gallery (static/data/gallery.js)
 static/vendor/                Bulma 1.0 and Font Awesome Free 6 (MIT / OFL / CC BY 4.0), vendored; only the Manrope / Space Mono web fonts come from Google Fonts

@@ -260,6 +260,16 @@
     });
   }
 
+  /* ---------- method overview video: big play button until the first play ---------- */
+  const explainer = document.getElementById('explainer');
+  if (explainer) {
+    const ev = document.getElementById('explainer-video');
+    const start = () => { ev.controls = true; ev.play().catch(() => {}); };
+    explainer.querySelector('.explainer-play').addEventListener('click', start);
+    ev.addEventListener('click', () => { if (!ev.controls) start(); });
+    ev.addEventListener('play', () => { ev.controls = true; explainer.classList.add('is-started'); });
+  }
+
   /* ---------- page chrome: scroll progress, card glow, reveal on scroll, copy BibTeX ---------- */
   const root = document.documentElement;
   let frame = null;
@@ -281,7 +291,7 @@
   });
 
   const reveal = document.querySelectorAll('.publication-title, .publication-authors, .publication-links, .hero-research-note, ' +
-    '.hero-media-shell, .section-heading, .abstract-panel, .paper-figure, .section-lead, .film-tabs, .cmp, .results-card, .continuous-carousel, ' +
+    '.explainer, .hero-media-shell, .section-heading, .abstract-panel, .paper-figure, .section-lead, .film-tabs, .cmp, .results-card, .continuous-carousel, ' +
     '.carousel-hint, .citation-card');
   if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
     const io = new IntersectionObserver(entries => entries.forEach(en => {
