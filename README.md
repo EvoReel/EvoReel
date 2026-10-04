@@ -41,6 +41,5 @@ and the whole site is under 500 MB.
 
 ## Credits
 
-Layout adapted from the [Nerfies](https://github.com/nerfies/nerfies.github.io) project page template; dark theme inspired by the
-[CineScale](https://eyeline-labs.github.io/CineScale/) project page (own CSS, no code copied)
-(CC BY-SA 4.0).
+Layout adapted from the [Nerfies](https://github.com/nerfies/nerfies.github.io) project page template
+(CC BY-SA 4.0); dark theme inspired by the [CineScale](https://eyeline-labs.github.io/CineScale/) project page.
