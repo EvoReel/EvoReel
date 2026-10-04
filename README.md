@@ -6,7 +6,7 @@ served with GitHub Pages straight from the `main` branch (no build step on GitHu
 ## Layout
 
 ```
-index.html                    page markup (sections: title, highlight wall, abstract, method, full films, comparisons, BibTeX)
+index.html                    page markup (sections: title, overview video, highlight wall, abstract, method, moments, full films, comparisons, results)
 static/css/index.css          page styles
 static/js/chapter-player.js   chapter-aware player: act bands, scene ticks, highlight band, hover thumbnails, keyboard
 static/js/index.js            builds the highlight wall, film tabs, synced comparisons and #film=…&t=… deep links
@@ -17,7 +17,7 @@ static/videos/highlights/     ~30 s highlight clips used in the comparisons
 static/videos/evoreel_explainer.mp4   3-minute method overview (top of the page)
 static/videos/previews/       12 s muted loops for the highlight wall
 static/videos/gallery/        6 s muted moments for the scrolling gallery (static/data/gallery.js)
-static/vendor/                Bulma 1.0 and Font Awesome Free 6 (MIT / OFL / CC BY 4.0), vendored; only the Manrope / Space Mono web fonts come from Google Fonts
+static/vendor/                Bulma 1.0 and Font Awesome Free 6 (MIT / OFL / CC BY 4.0), vendored; only the Source Serif 4 / Inter / JetBrains Mono web fonts come from Google Fonts
 ```
 
 ## Preview locally

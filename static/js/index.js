@@ -270,7 +270,7 @@
     ev.addEventListener('play', () => { ev.controls = true; explainer.classList.add('is-started'); });
   }
 
-  /* ---------- page chrome: scroll progress, card glow, reveal on scroll, copy BibTeX ---------- */
+  /* ---------- page chrome: scroll progress, reveal on scroll ---------- */
   const root = document.documentElement;
   let frame = null;
   const updateProgress = () => {
@@ -281,48 +281,15 @@
   addEventListener('scroll', () => { if (frame === null) frame = requestAnimationFrame(updateProgress); }, { passive: true });
   updateProgress();
 
-  document.querySelectorAll('[data-glow-card]').forEach(card => {
-    card.addEventListener('pointermove', e => {
-      const r = card.getBoundingClientRect();
-      card.style.setProperty('--glow-x', (100 * (e.clientX - r.left) / r.width) + '%');
-      card.style.setProperty('--glow-y', (100 * (e.clientY - r.top) / r.height) + '%');
-    });
-    card.addEventListener('pointerleave', () => { card.style.removeProperty('--glow-x'); card.style.removeProperty('--glow-y'); });
-  });
-
   const reveal = document.querySelectorAll('.publication-title, .publication-authors, .publication-links, .hero-research-note, ' +
     '.explainer, .hero-media-shell, .section-heading, .abstract-panel, .paper-figure, .section-lead, .film-tabs, .cmp, .results-card, .continuous-carousel, ' +
-    '.carousel-hint, .citation-card');
+    '.carousel-hint');
   if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
     const io = new IntersectionObserver(entries => entries.forEach(en => {
       if (en.isIntersecting) { en.target.classList.add('is-visible'); io.unobserve(en.target); }
     }), { threshold: 0.08, rootMargin: '0px 0px -6% 0px' });
     reveal.forEach((n, i) => { n.classList.add('scroll-reveal'); n.style.setProperty('--reveal-delay', (i % 4) * 70 + 'ms'); io.observe(n); });
   }
-
-  const copyBtn = document.getElementById('copy-citation');
-  const copyText = text => {
-    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text);
-    const ta = document.createElement('textarea');
-    ta.value = text;
-    ta.setAttribute('readonly', '');
-    ta.style.cssText = 'position:fixed;top:-1000px;opacity:0';
-    document.body.appendChild(ta);
-    ta.select();
-    const ok = document.execCommand('copy');
-    ta.remove();
-    return ok ? Promise.resolve() : Promise.reject(new Error('copy failed'));
-  };
-  copyBtn.addEventListener('click', () => {
-    copyText(document.getElementById('citation-bibtex-text').textContent).then(() => {
-      copyBtn.classList.add('is-copied');
-      copyBtn.innerHTML = '<span class="icon is-small"><i class="fas fa-check"></i></span>';
-      setTimeout(() => {
-        copyBtn.classList.remove('is-copied');
-        copyBtn.innerHTML = '<span class="icon is-small"><i class="far fa-copy"></i></span>';
-      }, 1600);
-    }).catch(() => {});
-  });
 
   /* ---------- deep links: #film=e05&t=92 ---------- */
   function fromHash() {

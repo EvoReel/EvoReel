@@ -4,7 +4,7 @@
 (function () {
   'use strict';
 
-  const ACT_COLORS = ['#ff9d42', '#68a8ff', '#56d39b', '#c792ff', '#ffd166', '#5fd3e6'];
+  const ACT_COLORS = ['#c96442', '#5a7fa8', '#7d8c5a'];  // clay, blue, olive (films have three acts)
 
   function fmtTime(t) {
     t = Math.max(0, t || 0);

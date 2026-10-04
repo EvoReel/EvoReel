@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,10 +10,10 @@
   <meta property="og:image" content="static/images/teaser.jpg">
   <title>EvoReel: Evolving Harness for Long-Horizon Video Generation</title>
 
-  <meta name="theme-color" content="#060606">
+  <meta name="theme-color" content="#faf9f5">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;600;700&amp;family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="static/vendor/bulma/bulma.min.css">
   <link rel="stylesheet" href="static/vendor/fontawesome/css/all.min.css">
   <link rel="stylesheet" href="static/css/index.css">
@@ -25,11 +25,6 @@
 <main>
 <!-- ============================== Title + highlight wall ============================== -->
 <section class="hero project-hero" id="top">
-  <div class="hero-ambient" aria-hidden="true">
-    <span class="ambient-orb ambient-orb-one"></span>
-    <span class="ambient-orb ambient-orb-two"></span>
-    <span class="ambient-grid"></span>
-  </div>
   <div class="hero-body">
     <div class="container is-max-widescreen hero-container has-text-centered">
       <h1 class="title is-1 publication-title">
@@ -49,14 +44,14 @@
           <span class="icon"><i class="fas fa-columns"></i></span><span>Comparisons</span></a></span>
       </div>
 
-      <aside class="hero-research-note glass-panel" data-glow-card>
+      <aside class="hero-research-note glass-panel">
         <p><span class="evoreel">EvoReel</span> turns a single brief into a <strong>minute-scale, multi-shot film</strong>.
           It <strong>learns from its own productions</strong> through experience, story and visual memories,
           <strong>without updating any model</strong>.</p>
       </aside>
 
       <figure class="explainer" id="explainer">
-        <div class="explainer-frame" data-glow-card>
+        <div class="explainer-frame">
           <video id="explainer-video" playsinline preload="metadata" poster="static/images/explainer_poster.jpg">
             <source src="static/videos/evoreel_explainer.mp4" type="video/mp4">
           </video>
@@ -67,7 +62,7 @@
         <figcaption>EvoReel in three minutes: why static harnesses lose the plot, and how memory and self-judges fix it (sound on).</figcaption>
       </figure>
 
-      <div class="hero-media-shell" data-glow-card>
+      <div class="hero-media-shell">
         <div id="highlight-wall" class="highlight-wall"></div>
       </div>
       <p class="hero-caption">
@@ -85,7 +80,7 @@
       <h2 class="title is-3">Abstract</h2>
     </div>
     <div class="overview-layout">
-      <div class="glass-panel abstract-panel" data-glow-card>
+      <div class="glass-panel abstract-panel">
         <div class="content">
           <p>
             Long-horizon video generation turns a brief into a minute-scale, multi-shot film. Since video models
@@ -260,7 +255,7 @@
     </div>
     <p class="section-lead">Script composite (on [0, 5]), share of the brief shown on screen, and character identity across cuts,
       against eight harnesses on three corpora, each rendered by the video model named in its header.</p>
-    <figure class="results-card" data-glow-card>
+    <figure class="results-card">
       <p class="horizontal-scroll-hint" aria-hidden="true"><span>Swipe horizontally</span><span>&larr;&nbsp;&rarr;</span></p>
       <div class="results-scroll" tabindex="0" role="region" aria-label="Scrollable results table">
         <table class="results-table">
@@ -317,29 +312,6 @@
   </div>
 </section>
 
-<!-- ============================== BibTeX ============================== -->
-<section class="section citation-section" id="BibTeX">
-  <div class="container is-max-widescreen">
-    <div class="citation-card" data-glow-card>
-      <div class="citation-copy">
-        <p class="section-eyebrow">Citation</p>
-        <h2 class="title is-3">BibTeX</h2>
-        <p class="citation-note">If you find EvoReel useful, please consider citing the paper.</p>
-      </div>
-      <div class="citation-bibtex-shell">
-        <button class="button is-small citation-copy-button" id="copy-citation" type="button" title="Copy BibTeX" aria-label="Copy BibTeX">
-          <span class="icon is-small"><i class="far fa-copy"></i></span>
-        </button>
-        <pre class="citation-bibtex"><code id="citation-bibtex-text">@inproceedings{anonymous2027evoreel,
-  title     = {EvoReel: Evolving Harness for Long-Horizon Video Generation},
-  author    = {Anonymous},
-  booktitle = {Under review},
-  year      = {2027}
-}</code></pre>
-      </div>
-    </div>
-  </div>
-</section>
 </main>
 
 <footer class="footer">
