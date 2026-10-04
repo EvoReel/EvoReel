@@ -308,7 +308,6 @@ kbd { font-family: var(--mono); font-size: .75em; padding: .05em .45em; border: 
 .results-table strong { color: var(--text); font-weight: 700; }
 .results-table u { text-decoration-color: var(--accent); text-decoration-thickness: 1.5px; text-underline-offset: .22em; }
 .results-table em { color: var(--text-soft); }
-.results-table .diag { color: var(--dim); }
 .results-ours th, .results-ours td { background-color: var(--accent-tint); border-top: 1px solid rgba(14,124,116,.35); }
 .results-table .results-ours th[scope='row'] { background: var(--accent-tint); color: var(--accent-strong); }
 .results-table tbody tr:last-child th, .results-table tbody tr:last-child td { border-bottom: 0; }
