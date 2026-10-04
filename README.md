@@ -17,7 +17,7 @@ static/videos/highlights/     ~30 s highlight clips used in the comparisons
 static/videos/evoreel_explainer.mp4   3-minute method overview (top of the page)
 static/videos/previews/       12 s muted loops for the highlight wall
 static/videos/gallery/        6 s muted moments for the scrolling gallery (static/data/gallery.js)
-static/vendor/                Bulma 1.0 and Font Awesome Free 6 (MIT / OFL / CC BY 4.0), vendored; only the Source Serif 4 / Inter / JetBrains Mono web fonts come from Google Fonts
+static/vendor/                Bulma 1.0 and Font Awesome Free 6 (MIT / OFL / CC BY 4.0), vendored; only the Plus Jakarta Sans / IBM Plex Mono web fonts come from Google Fonts
 ```
 
 ## Preview locally
