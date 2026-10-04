@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="EvoReel: an evolving harness for long-horizon video generation. Minute-scale, multi-shot films generated from a brief.">
+  <meta name="keywords" content="EvoReel, long video generation, agentic harness, multi-shot film, ReelBench">
+  <meta property="og:title" content="EvoReel: Evolving Harness for Long-Horizon Video Generation">
+  <meta property="og:description" content="Minute-scale, multi-shot films generated from a brief by an evolving agentic harness.">
+  <meta property="og:image" content="static/images/teaser.jpg">
+  <title>EvoReel: Evolving Harness for Long-Horizon Video Generation</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+  <link rel="stylesheet" href="static/vendor/bulma/bulma.min.css">
+  <link rel="stylesheet" href="static/vendor/fontawesome/css/all.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+  <link rel="icon" href="static/images/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<!-- ============================== Title ============================== -->
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop has-text-centered">
+      <h1 class="title is-1 publication-title"><span class="evoreel">EvoReel</span>: Evolving Harness for<br>Long-Horizon Video Generation</h1>
+      <div class="is-size-5 publication-authors">
+        <span class="author-block">Anonymous Authors</span>
+      </div>
+      <div class="is-size-6 publication-venue">Under review</div>
+      <div class="publication-links">
+        <span class="link-block"><a href="https://anonymous.4open.science/r/EvoReel-D2EF" target="_blank" rel="noopener" class="button is-dark is-rounded">
+          <span class="icon"><i class="fab fa-github"></i></span><span>Code</span></a></span>
+        <span class="link-block"><a href="#films" class="button is-dark is-rounded">
+          <span class="icon"><i class="fas fa-film"></i></span><span>Full Films</span></a></span>
+        <span class="link-block"><a href="#comparisons" class="button is-dark is-rounded">
+          <span class="icon"><i class="fas fa-columns"></i></span><span>Comparisons</span></a></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== Highlight wall ============================== -->
+<section class="hero teaser">
+  <div class="container is-max-widescreen">
+    <div class="hero-body">
+      <div id="highlight-wall" class="highlight-wall"></div>
+      <h2 class="subtitle has-text-centered teaser-caption">
+        Highlights from nine films that <span class="evoreel">EvoReel</span> wrote and rendered from a single brief,
+        running from 1 to 9 minutes. Click any clip to watch the full film with chapter navigation.
+      </h2>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== Abstract ============================== -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Long-horizon video generation turns a brief into a minute-scale, multi-shot film. Since video models
+            typically render clips under 30 seconds, it relies on agentic <em>harnesses</em> that must write a
+            coherent script and render it with characters and places consistent across cuts. Existing
+            harnesses, however, remain static. Across films, nothing learned carries over without fine-tuning
+            or curation, and within a film, every shot is conditioned on references fixed in advance, although
+            each shot needs different characters, places and earlier frames.
+          </p>
+          <p>
+            To address these shortcomings, we propose <b>EvoReel</b>, an evolving harness for
+            long-horizon video generation that learns from its own productions without updating any model.
+            Specifically, EvoReel writes and renders every shot from memory and checks it with a
+            self-judge. Across films, it distills its runs on training films into an experience memory of
+            the revisions that made shots more specific and the content that drafts tended to lose. Within
+            a film, role-specific agents write the screenplay from story to scene to shot over a structured
+            story memory, with the shot writer consulting that experience as it first drafts each scene,
+            and a self-judge scores each draft on professional screenwriting dimensions and sends weak
+            shots back for revision. Rendering follows the same pattern: to keep characters and places consistent across shots, a
+            multimodal visual memory supplies each shot with the reference images and earlier frames it calls
+            for, and a second self-judge checks each rendered shot against its script and re-renders those
+            that fall short.
+          </p>
+          <p>
+            With these designs, EvoReel outperforms the strongest of eight baselines on
+            ViStoryBench and held-out MovieBench by 28.5% and 84.2% in script composite and by up to 20.2%
+            in how much of the brief its films show, and ties for the highest character consistency under the
+            proprietary renderer. We also introduce ReelBench, 104 original premises across 13
+            genres with checkable constraints, which tests agents beyond shot lists adapted from existing
+            productions.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== Method ============================== -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Static vs. Evolving Harness</h2>
+    <figure class="paper-figure">
+      <img src="static/images/teaser.jpg" alt="Static harness vs. EvoReel" loading="lazy">
+      <figcaption>
+        A static harness starts every film from scratch and conditions every shot on references fixed in advance.
+        EvoReel carries an experience memory across films and, within a film, retrieves from a visual memory
+        the references each shot actually calls for. All model weights stay frozen.
+      </figcaption>
+    </figure>
+  </div>
+  <div class="container is-max-widescreen method-figure-wrap">
+    <h2 class="title is-3 has-text-centered">Method</h2>
+    <figure class="paper-figure">
+      <img src="static/images/framework_visual.jpg" alt="EvoReel framework" loading="lazy">
+      <figcaption>
+        <b>(a)</b> Role-specific agents write the screenplay from story to scene to shot over a structured story memory,
+        and a script self-judge sends weak shots back for revision.
+        <b>(b)</b> For each shot, a multimodal visual memory supplies the identities, location and earlier frames it needs;
+        a video self-judge re-renders shots that fall short of their script.
+        <b>(c)</b> Runs on training films are distilled into an experience memory that the shot writer reads at first draft.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============================== Full films (chapter player) ============================== -->
+<section class="section films-section" id="films">
+  <div class="container is-max-widescreen">
+    <h2 class="title is-3 has-text-centered">Full Films</h2>
+    <p class="has-text-centered section-lead">
+      Every film below is a single uncut output. The timeline is split into the script's three acts and its scenes:
+      hover to preview, click a chapter to jump, and use <kbd>[</kbd>&nbsp;<kbd>]</kbd> to step between chapters.
+      The <span class="hl-swatch"></span> band marks the highlight clip shown above.
+    </p>
+
+    <div id="film-tabs" class="film-tabs" role="tablist"></div>
+
+    <div class="theater" id="theater">
+      <div class="theater-main">
+        <div class="player" id="player" tabindex="0">
+          <video id="player-video" playsinline preload="metadata"></video>
+          <div class="player-overlay" id="player-overlay"><i class="fas fa-play"></i></div>
+          <div class="player-chapter-flag" id="player-chapter-flag"></div>
+          <div class="controls">
+            <div class="timeline" id="timeline">
+              <div class="timeline-acts" id="timeline-acts"></div>
+              <div class="timeline-track" id="timeline-track">
+                <div class="timeline-hl" id="timeline-hl"></div>
+                <div class="timeline-buffer" id="timeline-buffer"></div>
+                <div class="timeline-progress" id="timeline-progress"></div>
+                <div class="timeline-ticks" id="timeline-ticks"></div>
+                <div class="timeline-knob" id="timeline-knob"></div>
+              </div>
+              <div class="timeline-tip" id="timeline-tip">
+                <img id="timeline-tip-img" alt="">
+                <div class="timeline-tip-label" id="timeline-tip-label"></div>
+                <div class="timeline-tip-time" id="timeline-tip-time"></div>
+              </div>
+            </div>
+            <div class="controls-row">
+              <button class="ctl" id="btn-prev" title="Previous chapter ([)"><i class="fas fa-backward-step"></i></button>
+              <button class="ctl" id="btn-play" title="Play / pause (space)"><i class="fas fa-play"></i></button>
+              <button class="ctl" id="btn-next" title="Next chapter (])"><i class="fas fa-forward-step"></i></button>
+              <button class="ctl" id="btn-mute" title="Mute (m)"><i class="fas fa-volume-high"></i></button>
+              <input type="range" id="volume" min="0" max="1" step="0.05" value="1" aria-label="Volume">
+              <span class="ctl-time"><span id="time-cur">0:00</span> / <span id="time-dur">0:00</span></span>
+              <span class="ctl-chapter" id="ctl-chapter"></span>
+              <span class="ctl-spacer"></span>
+              <button class="ctl" id="btn-hl" title="Jump to highlight"><i class="fas fa-star"></i></button>
+              <select class="ctl-speed" id="speed" aria-label="Playback speed">
+                <option value="0.75">0.75×</option><option value="1" selected>1×</option>
+                <option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="2">2×</option>
+              </select>
+              <button class="ctl" id="btn-link" title="Copy link to this moment"><i class="fas fa-link"></i></button>
+              <button class="ctl" id="btn-fs" title="Fullscreen (f)"><i class="fas fa-expand"></i></button>
+            </div>
+          </div>
+        </div>
+        <div class="film-info" id="film-info"></div>
+      </div>
+      <aside class="chapters" id="chapters" aria-label="Chapters"></aside>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== Comparisons ============================== -->
+<section class="section" id="comparisons">
+  <div class="container is-max-widescreen">
+    <h2 class="title is-3 has-text-centered">Comparison with Baselines</h2>
+    <p class="has-text-centered section-lead">
+      The same brief rendered by EvoReel and by a baseline harness, both with the same proprietary video model
+      (Veo&nbsp;3.1&nbsp;Fast). The two clips play in sync; full baseline films are linked below each pair.
+    </p>
+    <div id="comparison-list"></div>
+  </div>
+</section>
+
+<!-- ============================== BibTeX ============================== -->
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@inproceedings{anonymous2027evoreel,
+  title     = {EvoReel: Evolving Harness for Long-Horizon Video Generation},
+  author    = {Anonymous},
+  booktitle = {Under review},
+  year      = {2027}
+}</code></pre>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered is-size-7">
+      <p>
+        All videos on this page are generated. Page layout adapted from the
+        <a href="https://github.com/nerfies/nerfies.github.io" target="_blank" rel="noopener">Nerfies</a> project page template,
+        licensed under <a href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>.
+      </p>
+    </div>
+  </div>
+</footer>
+
+<script src="static/data/films.js"></script>
+<script src="static/js/chapter-player.js"></script>
+<script src="static/js/index.js"></script>
+</body>
+</html>
