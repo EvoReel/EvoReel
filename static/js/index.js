@@ -1,4 +1,4 @@
-/* Page wiring: highlight wall, film tabs + chapter player, synced comparisons, deep links. */
+/* Page wiring: highlight wall, film tabs + chapter player, synced comparisons, moments gallery, deep links. */
 (function () {
   'use strict';
   const DATA = window.EVOREEL, esc = window.escHtml, fmtTime = window.fmtTime;
@@ -109,6 +109,157 @@
     en.target.querySelectorAll('video').forEach(v => (en.isIntersecting ? v.play().catch(() => {}) : v.pause()));
   }), { threshold: 0.1 }).observe(wall);
 
+  /* ---------- hover magnifier (2.5x canvas lens), shared by the moments gallery and the comparisons ---------- */
+  const canHover = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  let lensActive = null, lensPointer = null, lensFrame = null;
+  function closeLens() {
+    if (!lensActive) return;
+    const a = lensActive;
+    a.box.classList.remove('is-magnifying');
+    a.canvas.hidden = true;
+    lensActive = lensPointer = null;
+    if (lensFrame !== null) { cancelAnimationFrame(lensFrame); lensFrame = null; }
+    if (a.onClose) a.onClose();
+  }
+  function renderLens() {
+    if (!lensActive || !lensPointer) { lensFrame = null; return; }
+    const { box, video, canvas, margin } = lensActive;
+    const vr = video.getBoundingClientRect(), br = box.getBoundingClientRect();
+    const x = lensPointer.clientX, y = lensPointer.clientY;
+    const over = x >= vr.left && x <= vr.right && y >= vr.top && y <= vr.bottom;
+    if (!over || video.readyState < 2 || !video.videoWidth) {
+      canvas.hidden = true;
+      lensFrame = requestAnimationFrame(renderLens);
+      return;
+    }
+    canvas.hidden = false;
+    const lw = canvas.offsetWidth, lh = canvas.offsetHeight;
+    canvas.style.left = Math.max(margin, Math.min(br.width - lw - margin, x - br.left - lw / 2)) + 'px';
+    canvas.style.top = Math.max(margin, Math.min(br.height - lh - margin, y - br.top - lh / 2)) + 'px';
+    // visible region of the frame (object-fit: cover crops, contain letterboxes)
+    const zoom = 2.5, elAspect = vr.width / vr.height, vAspect = video.videoWidth / video.videoHeight;
+    let vx = 0, vy = 0, vw = video.videoWidth, vh = video.videoHeight, dw = vr.width, dh = vr.height, ox = 0, oy = 0;
+    const cover = getComputedStyle(video).objectFit === 'cover';
+    if (cover) {
+      if (vAspect > elAspect) { vw = vh * elAspect; vx = (video.videoWidth - vw) / 2; }
+      else { vh = vw / elAspect; vy = (video.videoHeight - vh) / 2; }
+    } else if (vAspect > elAspect) { dh = vr.width / vAspect; oy = (vr.height - dh) / 2; }
+    else { dw = vr.height * vAspect; ox = (vr.width - dw) / 2; }
+    const nx = Math.min(1, Math.max(0, (x - vr.left - ox) / dw)), ny = Math.min(1, Math.max(0, (y - vr.top - oy) / dh));
+    const sw = (lw / dw) * vw / zoom, sh = (lh / dh) * vh / zoom;
+    const sx = Math.max(vx, Math.min(vx + vw - sw, vx + nx * vw - sw / 2));
+    const sy = Math.max(vy, Math.min(vy + vh - sh, vy + ny * vh - sh / 2));
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(video, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
+    lensFrame = requestAnimationFrame(renderLens);
+  }
+  function attachLens(box, video, opts) {
+    if (!canHover) return;
+    opts = opts || {};
+    const canvas = document.createElement('canvas');
+    canvas.className = 'video-magnifier-lens';
+    canvas.width = canvas.height = 260;
+    canvas.hidden = true;
+    canvas.setAttribute('aria-hidden', 'true');
+    box.appendChild(canvas);
+    box.addEventListener('pointerenter', e => {
+      if (e.pointerType === 'touch') return;
+      closeLens();
+      lensActive = { box, video, canvas, margin: opts.margin || 6, onClose: opts.onClose };
+      lensPointer = { clientX: e.clientX, clientY: e.clientY };
+      box.classList.add('is-magnifying');
+      if (opts.onOpen) opts.onOpen();
+      lensFrame = requestAnimationFrame(renderLens);
+    });
+    box.addEventListener('pointermove', e => { if (lensActive && lensActive.box === box) lensPointer = { clientX: e.clientX, clientY: e.clientY }; });
+    box.addEventListener('pointerleave', () => { if (lensActive && lensActive.box === box) closeLens(); });
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLens(); });
+  addEventListener('blur', closeLens);
+  document.querySelectorAll('.cmp-cell').forEach(cell => attachLens(cell, cell.querySelector('video')));
+
+  /* ---------- moments gallery: endless carousel; hover snaps the card to center and zooms ---------- */
+  const track = document.getElementById('moments-track');
+  const moments = window.EVOREEL_GALLERY || [];
+  if (track && moments.length > 1) {
+    const viewport = track.parentElement;
+    const cardHtml = m => '<article class="continuous-video-card" data-film="' + m.film + '" data-t="' + m.t + '">' +
+      '<video data-src="' + m.src + '" poster="' + m.poster + '" muted loop playsinline preload="none"></video>' +
+      '<div class="moment-meta"><span class="moment-title" title="' + esc(m.label) + '">' + esc(m.title) + '</span>' +
+      '<button type="button" class="moment-open">Watch at ' + fmtTime(m.t) + '</button></div></article>';
+    // two copies so the -50% keyframe loops seamlessly
+    track.innerHTML = moments.map(cardHtml).join('') + moments.map(cardHtml).join('');
+    const cards = Array.from(track.children);
+    cards.slice(moments.length).forEach(c => c.setAttribute('aria-hidden', 'true'));
+
+    let loopDistance = 0, duration = 80, snapFrame = null;
+    const updateDuration = () => {
+      loopDistance = cards[moments.length].offsetLeft - cards[0].offsetLeft;
+      duration = Math.max(80, loopDistance / 220);
+      track.style.setProperty('--carousel-duration', duration + 's');
+    };
+    requestAnimationFrame(updateDuration);
+    if ('ResizeObserver' in window) new ResizeObserver(updateDuration).observe(viewport);
+    else addEventListener('resize', updateDuration);
+
+    const videos = cards.map(c => c.querySelector('video'));
+    const playVideo = v => {
+      if (!v.getAttribute('src')) { v.src = v.dataset.src; v.preload = 'auto'; }
+      v.play().catch(() => {});
+    };
+    if ('IntersectionObserver' in window) {
+      const vo = new IntersectionObserver(entries => entries.forEach(en => (en.isIntersecting ? playVideo(en.target) : en.target.pause())),
+        { root: viewport, rootMargin: '0px 50% 0px 50%' });
+      // only observe while the section is on screen, so off-page clips stay unloaded
+      new IntersectionObserver(entries => entries.forEach(en => {
+        if (en.isIntersecting) videos.forEach(v => vo.observe(v));
+        else { videos.forEach(v => { vo.unobserve(v); v.pause(); }); }
+      }), { rootMargin: '200px 0px' }).observe(viewport);
+    } else videos.forEach(playVideo);
+
+    const translateX = t => {
+      const m = t && t.match(/^matrix(3d)?\((.+)\)$/);
+      if (!m) return 0;
+      const v = m[2].split(',').map(Number);
+      return m[1] ? v[12] : v[4];
+    };
+    const resume = () => {
+      if (snapFrame !== null) { cancelAnimationFrame(snapFrame); snapFrame = null; }
+      const x = translateX(getComputedStyle(track).transform);
+      const offset = loopDistance > 0 ? ((-x % loopDistance) + loopDistance) % loopDistance : 0;
+      track.style.setProperty('--carousel-delay', -duration * offset / Math.max(loopDistance, 1) + 's');
+      track.style.transition = 'none';
+      track.style.animation = 'none';
+      track.style.transform = '';
+      track.getBoundingClientRect();
+      track.style.animation = '';
+    };
+    const snapToCenter = card => {
+      const x = translateX(getComputedStyle(track).transform);
+      track.style.animation = 'none';
+      track.style.transition = 'none';
+      track.style.transform = 'translate3d(' + x + 'px,0,0)';
+      track.getBoundingClientRect();
+      const vr = viewport.getBoundingClientRect(), cr = card.getBoundingClientRect();
+      const target = x + (vr.left + vr.width / 2) - (cr.left + cr.width / 2);
+      track.style.transition = 'transform 420ms cubic-bezier(0.22, 1, 0.36, 1)';
+      snapFrame = requestAnimationFrame(() => { track.style.transform = 'translate3d(' + target + 'px,0,0)'; snapFrame = null; });
+    };
+    const hint = document.querySelector('#moments .carousel-hint');
+    if (hint && !canHover) hint.textContent = 'Tap a clip to open the film at that moment';
+    cards.forEach((card, i) => attachLens(card, videos[i], { margin: 8, onOpen: () => snapToCenter(card), onClose: resume }));
+
+    track.addEventListener('click', e => {
+      const card = e.target.closest('.continuous-video-card');
+      if (!card) return;
+      closeLens();
+      selectFilm(card.dataset.film, parseFloat(card.dataset.t), true);
+      document.getElementById('films').scrollIntoView({ behavior: 'smooth' });
+    });
+  }
+
   /* ---------- page chrome: scroll progress, card glow, reveal on scroll, copy BibTeX ---------- */
   const root = document.documentElement;
   let frame = null;
@@ -130,7 +281,8 @@
   });
 
   const reveal = document.querySelectorAll('.publication-title, .publication-authors, .publication-links, .hero-research-note, ' +
-    '.hero-media-shell, .section-heading, .abstract-panel, .paper-figure, .section-lead, .film-tabs, .cmp, .citation-card');
+    '.hero-media-shell, .section-heading, .abstract-panel, .paper-figure, .section-lead, .film-tabs, .cmp, .results-card, .continuous-carousel, ' +
+    '.carousel-hint, .citation-card');
   if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
     const io = new IntersectionObserver(entries => entries.forEach(en => {
       if (en.isIntersecting) { en.target.classList.add('is-visible'); io.unobserve(en.target); }
@@ -139,15 +291,27 @@
   }
 
   const copyBtn = document.getElementById('copy-citation');
+  const copyText = text => {
+    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text);
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:fixed;top:-1000px;opacity:0';
+    document.body.appendChild(ta);
+    ta.select();
+    const ok = document.execCommand('copy');
+    ta.remove();
+    return ok ? Promise.resolve() : Promise.reject(new Error('copy failed'));
+  };
   copyBtn.addEventListener('click', () => {
-    navigator.clipboard.writeText(document.getElementById('citation-bibtex-text').textContent).then(() => {
+    copyText(document.getElementById('citation-bibtex-text').textContent).then(() => {
       copyBtn.classList.add('is-copied');
       copyBtn.innerHTML = '<span class="icon is-small"><i class="fas fa-check"></i></span>';
       setTimeout(() => {
         copyBtn.classList.remove('is-copied');
         copyBtn.innerHTML = '<span class="icon is-small"><i class="far fa-copy"></i></span>';
       }, 1600);
-    });
+    }).catch(() => {});
   });
 
   /* ---------- deep links: #film=e05&t=92 ---------- */

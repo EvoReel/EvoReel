@@ -145,6 +145,22 @@
   </div>
 </section>
 
+<!-- ============================== Moments gallery ============================== -->
+<section class="section gallery-section" id="moments">
+  <div class="container is-max-widescreen">
+    <div class="section-heading">
+      <p class="section-eyebrow">Moments</p>
+      <h2 class="title is-3">Inside the Films</h2>
+    </div>
+    <div class="continuous-carousel" aria-label="Continuously scrolling gallery of moments from the films">
+      <div class="continuous-carousel-viewport">
+        <div class="continuous-carousel-track" id="moments-track"></div>
+      </div>
+    </div>
+    <p class="carousel-hint">Hover to zoom in &middot; click to open the film at that moment</p>
+  </div>
+</section>
+
 <!-- ============================== Full films (chapter player) ============================== -->
 <section class="section films-section" id="films">
   <div class="container is-max-widescreen">
@@ -223,6 +239,72 @@
   </div>
 </section>
 
+<!-- ============================== Quantitative results ============================== -->
+<section class="section results-section" id="results">
+  <div class="container is-max-widescreen">
+    <div class="section-heading">
+      <p class="section-eyebrow">Quantitative evaluation</p>
+      <h2 class="title is-3">Main Results</h2>
+    </div>
+    <p class="section-lead">Script composite (on [0, 5]), share of the brief shown on screen, and character identity across cuts,
+      against eight harnesses on three corpora, each rendered by the video model named in its header.</p>
+    <figure class="results-card" data-glow-card>
+      <p class="horizontal-scroll-hint" aria-hidden="true"><span>Swipe horizontally</span><span>&larr;&nbsp;&rarr;</span></p>
+      <div class="results-scroll" tabindex="0" role="region" aria-label="Scrollable results table">
+        <table class="results-table">
+          <thead>
+            <tr>
+              <th rowspan="2">Method</th>
+              <th colspan="3" class="corpus group-start">ViStoryBench (n=80)<small>video: Veo 3.1 Fast</small></th>
+              <th colspan="3" class="corpus group-start">ReelBench (n=104)<small>video: Veo 3.1 Fast</small></th>
+              <th colspan="3" class="corpus group-start">MovieBench (n=41)<small>video: LTX-2.3</small></th>
+            </tr>
+            <tr>
+              <th class="group-start">Script</th><th>Shown</th><th>Ident.</th>
+              <th class="group-start">Script</th><th>Shown</th><th>Ident.</th>
+              <th class="group-start">Script</th><th>Shown</th><th>Ident.</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">ScriptAgent</th><td class="group-start"><u>3.063</u></td><td>0.345</td><td><em>0.841</em></td><td class="group-start"><em>3.872</em></td><td class="diag">0.511</td><td class="diag">0.814</td><td class="group-start">2.000</td><td><u>0.613</u></td><td>0.815</td>
+            </tr>
+            <tr>
+              <th scope="row">VideoDirectorGPT</th><td class="group-start"><em>2.987</em></td><td>0.501</td><td><strong>0.858</strong></td><td class="group-start">3.794</td><td class="diag">0.486</td><td class="diag">0.791</td><td class="group-start">2.112</td><td>0.487</td><td><em>0.834</em></td>
+            </tr>
+            <tr>
+              <th scope="row">Anim-Director</th><td class="group-start">2.750</td><td><em>0.545</em></td><td>0.830</td><td class="group-start"><u>4.018</u></td><td class="diag">0.502</td><td class="diag">0.853</td><td class="group-start"><u>2.226</u></td><td>0.502</td><td><strong>0.917</strong></td>
+            </tr>
+            <tr>
+              <th scope="row">VideoAgent</th><td class="group-start">2.610</td><td>0.489</td><td>0.821</td><td class="group-start">3.575</td><td class="diag">0.444</td><td class="diag">0.741</td><td class="group-start">1.673</td><td>0.413</td><td>0.820</td>
+            </tr>
+            <tr>
+              <th scope="row">ViMax</th><td class="group-start">2.291</td><td>0.519</td><td>0.808</td><td class="group-start">3.370</td><td class="diag">0.474</td><td class="diag">0.815</td><td class="group-start"><em>2.154</em></td><td><em>0.609</em></td><td>0.825</td>
+            </tr>
+            <tr>
+              <th scope="row">MovieAgent</th><td class="group-start">2.204</td><td>0.402</td><td>0.711</td><td class="group-start">3.232</td><td class="diag">0.288</td><td class="diag">0.629</td><td class="group-start">1.919</td><td>0.274</td><td>0.673</td>
+            </tr>
+            <tr>
+              <th scope="row">Mora</th><td class="group-start">1.966</td><td>0.477</td><td>0.758</td><td class="group-start">3.074</td><td class="diag">0.470</td><td class="diag">0.620</td><td class="group-start">1.838</td><td>0.483</td><td>0.795</td>
+            </tr>
+            <tr>
+              <th scope="row">Co-Director</th><td class="group-start">1.533</td><td><u>0.560</u></td><td>0.697</td><td class="group-start">3.376</td><td class="diag">0.392</td><td class="diag">0.589</td><td class="group-start">1.646</td><td>0.507</td><td>0.757</td>
+            </tr>
+            <tr class="results-ours">
+              <th scope="row">EvoReel <span class="ours-badge">Ours</span></th><td class="group-start"><strong>3.938</strong></td><td><strong>0.630</strong></td><td><strong>0.859</strong></td><td class="group-start"><strong>4.242</strong></td><td class="diag">0.520</td><td class="diag">0.883</td><td class="group-start"><strong>4.099</strong></td><td><strong>0.737</strong></td><td><u>0.879</u></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <figcaption>
+        <span>Best, second and third per column in <strong>bold</strong>, <u>underline</u> and <em>italics</em>; higher is better everywhere.
+          ViStoryBench Ident.&rsquo;s top two, 0.001 apart, share the best mark.</span>
+        <span>The two ReelBench video columns are unranked diagnostics: identity there is scored against each system&rsquo;s own cast.</span>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
 <!-- ============================== BibTeX ============================== -->
 <section class="section citation-section" id="BibTeX">
   <div class="container is-max-widescreen">
@@ -252,12 +334,12 @@
   <div class="container is-max-widescreen footer-inner">
     <p>All videos on this page are generated.</p>
     <p>Layout adapted from the <a href="https://github.com/nerfies/nerfies.github.io" target="_blank" rel="noopener">Nerfies</a> template
-      (<a href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>),
-      design inspired by <a href="https://eyeline-labs.github.io/CineScale/" target="_blank" rel="noopener">CineScale</a>.</p>
+      (<a href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>).</p>
   </div>
 </footer>
 
 <script src="static/data/films.js"></script>
+<script src="static/data/gallery.js"></script>
 <script src="static/js/chapter-player.js"></script>
 <script src="static/js/index.js"></script>
 </body>
