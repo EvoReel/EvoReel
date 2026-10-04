@@ -4,7 +4,7 @@
 (function () {
   'use strict';
 
-  const ACT_COLORS = ['#5b8def', '#e07a5f', '#3fa37a', '#9b6fd1', '#d4a017', '#4aa3b5'];
+  const ACT_COLORS = ['#ff9d42', '#68a8ff', '#56d39b', '#c792ff', '#ffd166', '#5fd3e6'];
 
   function fmtTime(t) {
     t = Math.max(0, t || 0);
@@ -107,7 +107,7 @@
           lastAct = c.act;
           const a = f.acts[c.act];
           const h = el('div', 'ch-act', esc(a.label) + (a.name ? ' <span>· ' + esc(a.name) + '</span>' : ''));
-          h.style.background = ACT_COLORS[c.act % ACT_COLORS.length];
+          h.style.setProperty('--act-color', ACT_COLORS[c.act % ACT_COLORS.length]);
           box.appendChild(h);
         }
         const inHl = c.t < f.highlight_window.end && c.end > f.highlight_window.start;

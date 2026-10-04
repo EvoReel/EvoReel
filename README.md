@@ -15,7 +15,7 @@ static/images/                paper figures, posters, per-chapter thumbnails (th
 static/videos/full/           full films (H.264 + AAC, faststart)
 static/videos/highlights/     ~30 s highlight clips used in the comparisons
 static/videos/previews/       12 s muted loops for the highlight wall
-static/vendor/                Bulma 1.0 and Font Awesome Free 6 (MIT / OFL / CC BY 4.0), vendored so the page has no CDN dependency
+static/vendor/                Bulma 1.0 and Font Awesome Free 6 (MIT / OFL / CC BY 4.0), vendored; only the Manrope / Space Mono web fonts come from Google Fonts
 ```
 
 ## Preview locally
@@ -41,5 +41,6 @@ and the whole site is under 500 MB.
 
 ## Credits
 
-Layout adapted from the [Nerfies](https://github.com/nerfies/nerfies.github.io) project page template
+Layout adapted from the [Nerfies](https://github.com/nerfies/nerfies.github.io) project page template; dark theme inspired by the
+[CineScale](https://eyeline-labs.github.io/CineScale/) project page (own CSS, no code copied)
 (CC BY-SA 4.0).
